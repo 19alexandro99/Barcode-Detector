@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 import bar_detector
 import cv2
 import time
-from imutils.video import FileVideoStream, FPS
+from imutils.video import FileVideoStream
 from datetime import datetime
 import webbrowser
 
@@ -28,7 +28,6 @@ class Thread(QtCore.QThread):
 
     def run(self):
         fvs = FileVideoStream('staff/main_test3.mp4').start()
-        fps = FPS().start()
         time.sleep(1.0)
         while True:
             frame = fvs.read()
@@ -58,9 +57,6 @@ class Thread(QtCore.QThread):
                 conn.close()
             if answer != "cannot encode":
                 break
-            fps.update()
-        fps.stop()
-        print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
         cv2.destroyAllWindows()
         fvs.stop()
 

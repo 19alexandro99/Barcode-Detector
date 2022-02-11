@@ -1,12 +1,10 @@
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2
 
 
 def collect_barcode_data(image):
     img = Image.fromarray(image)
-    #img.show()
     width, height = img.size
     max_size = (width, 128)
     img.thumbnail(max_size)
@@ -16,14 +14,11 @@ def collect_barcode_data(image):
     hor_data = np.asarray(hor_line_bw, dtype="int32")[0]
 
     hor_data = 255 - hor_data
-    #hor_data = hor_data[12:len(hor_data)]
     return hor_data
 
 
 def find_type_and_bit_width(hor_data):
     avg = np.average(hor_data)
-    #plt.plot(hor_data)
-    #plt.show()
     pos1, pos2 = -1, -1
     strips = ""
     bit_width_code128 = ""
@@ -214,8 +209,8 @@ def encode_characters(type):
 
 def get_decoded_128_code(bits):
     sym_len = 11
-    symbols = [bits[i:i + sym_len] for i in range(0, len(bits), sym_len)] #Разделение последовательности по 11 бит
-    if symbols[0] == '11010000100':  #Проверка на тип кодировки
+    symbols = [bits[i:i + sym_len] for i in range(0, len(bits), sym_len)]
+    if symbols[0] == '11010000100':
         code128 = CODE128A
     elif symbols[0] == '11010010000':
         code128 = CODE128B
@@ -224,11 +219,11 @@ def get_decoded_128_code(bits):
     else:
         return None
     str_out = ""
-    for sym in range(len(symbols)):          # Расшифровка по выбранному словарю
+    for sym in range(len(symbols)):
         if symbols[sym] and symbols[sym+1] in code128:
             if code128[symbols[sym]] == 'Start':
                 continue
-            if code128[symbols[sym]] == 'CodeA': # Смена словаря при поступлении команды
+            if code128[symbols[sym]] == 'CodeA':
                 code128 = CODE128A
                 continue
             if code128[symbols[sym]] == 'CodeB':
@@ -237,7 +232,7 @@ def get_decoded_128_code(bits):
             if code128[symbols[sym]] == 'CodeC':
                 code128 = CODE128C
                 continue
-            if code128[symbols[sym+1]] == 'Stop': # При поступлении команды стоп, прекратить расшифровку
+            if code128[symbols[sym+1]] == 'Stop':
                 break
             str_out += code128[symbols[sym]]
         else:
@@ -285,7 +280,6 @@ def decode(image):
     hor_data = collect_barcode_data(image)
     bit_width_code128, bit_width_ean13, pos1 = find_type_and_bit_width(hor_data)
     if isinstance(bit_width_ean13, int):
-        # print(bit_width_ean13, basewidth, avg)
         bits_ean13 = get_code(hor_data, bit_width_ean13, pos1)
         answer = get_decoded_ean13(bits_ean13)
         print(bits_ean13)
