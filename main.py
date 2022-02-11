@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 import bar_detector
 import cv2
 import time
-from imutils.video import FileVideoStream
+from imutils.video import VideoStream
 from datetime import datetime
 import webbrowser
 
@@ -27,7 +27,7 @@ class Thread(QtCore.QThread):
     changePixmap = QtCore.pyqtSignal(QtGui.QPixmap)
 
     def run(self):
-        fvs = FileVideoStream('staff/main_test3.mp4').start()
+        fvs = VideoStream(0).start()
         time.sleep(1.0)
         while True:
             frame = fvs.read()

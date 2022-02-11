@@ -282,7 +282,6 @@ def decode(image):
     if isinstance(bit_width_ean13, int):
         bits_ean13 = get_code(hor_data, bit_width_ean13, pos1)
         answer = get_decoded_ean13(bits_ean13)
-        print(bits_ean13)
         if answer:
             answer = [answer, "EAN_13"]
             return answer
