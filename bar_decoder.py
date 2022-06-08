@@ -12,7 +12,6 @@ def collect_barcode_data(image):
     img = img.resize((basewidth, height), Image.ANTIALIAS)
     hor_line_bw = img.crop((0, int(height / 2), basewidth, int(height / 2) + 1)).convert('L')
     hor_data = np.asarray(hor_line_bw, dtype="int32")[0]
-
     hor_data = 255 - hor_data
     return hor_data
 

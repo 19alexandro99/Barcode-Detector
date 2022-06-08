@@ -38,8 +38,8 @@ def start(image):
 
 def bar_detector(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gradX = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=-1)
-    gradY = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=-1)
+    gradX = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=1)
+    gradY = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=1)
     abs_gradX = np.absolute(gradX)
     gradX = np.uint8(abs_gradX)
     abs_gradY = np.absolute(gradY)
@@ -49,8 +49,8 @@ def bar_detector(image):
     blurred = cv2.medianBlur(gradient, 19)
     (_, thresh) = cv2.threshold(blurred, 0, 255, cv2.THRESH_OTSU)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (27, 9))
-    erode = cv2.erode(thresh, kernel, iterations=1)
-    dilate = cv2.dilate(erode, kernel, iterations=2)
+    erode = cv2.erode(thresh, None, iterations=1)
+    dilate = cv2.dilate(erode, None, iterations=2)
     closed = cv2.morphologyEx(dilate, cv2.MORPH_CLOSE, kernel)
 
     (cnts, _) = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL,
